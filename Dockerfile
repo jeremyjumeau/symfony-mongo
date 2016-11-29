@@ -45,7 +45,8 @@ RUN apt-get install -y \
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');" \
-    && composer global require symfony/var-dumper
+    && mkdir -p /var/.composer \
+    && composer global --no-interaction --working-dir=/var/.composer require symfony/var-dumper
 
 # Node / NPM / Bower / Gulp / Zombie.js
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
