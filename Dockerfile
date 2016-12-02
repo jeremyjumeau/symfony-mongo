@@ -2,7 +2,7 @@ FROM php:7.0-fpm
 
 
 ENV NODE_PATH /usr/lib/node_modules
-ENV BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://localhost"}}}'
+ENV BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://test"}}}'
 
 MAINTAINER Jeremy Jumeau <jumeau.jeremy@gmail.com>
 
