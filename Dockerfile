@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:fpm
 
 
 ENV NODE_PATH /usr/lib/node_modules
