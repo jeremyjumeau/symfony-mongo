@@ -7,7 +7,7 @@ ENV BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http:
 MAINTAINER Jeremy Jumeau <jumeau.jeremy@gmail.com>
 
 # PHP extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-utils \
         git \
         libicu-dev \
@@ -32,14 +32,17 @@ RUN apt-get update && apt-get install -y \
         imagick
 
 # Wkhtmltopdf
-RUN apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
         libxrender-dev \
         wget \
         xz-utils \
     && wget http://download.gna.org/wkhtmltopdf/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
     && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
     && cp wkhtmltox/bin/wkhtmltopdf /usr/local/bin/ \
-    && cp wkhtmltox/bin/wkhtmltoimage /usr/local/bin/
+    && cp wkhtmltox/bin/wkhtmltoimage /usr/local/bin/ \
+    && rm wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Composer
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
