@@ -44,10 +44,6 @@ RUN apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# SCP
-RUN apt-get install -y --no-install-recommends \
-        openssh-client
-
 # Composer
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
