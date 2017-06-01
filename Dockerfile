@@ -1,8 +1,10 @@
 FROM php:fpm
 
 
-ENV NODE_PATH /usr/lib/node_modules
-ENV BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://test"}}}'
+ENV NODE_PATH /usr/lib/node_modules \
+    BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://test"}}}' \
+    TERM="xterm" \
+    COMPOSER_ALLOW_SUPERUSER=1
 
 MAINTAINER Jeremy Jumeau <jumeau.jeremy@gmail.com>
 
