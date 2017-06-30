@@ -1,10 +1,9 @@
 FROM php:fpm
 
-
-ENV NODE_PATH /usr/lib/node_modules \
-    BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://test"}}}' \
-    TERM="xterm" \
-    COMPOSER_ALLOW_SUPERUSER=1
+ENV NODE_PATH /usr/lib/node_modules
+ENV BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://test"}}}'
+ENV TERM="xterm"
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 MAINTAINER Jeremy Jumeau <jumeau.jeremy@gmail.com>
 
@@ -33,19 +32,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mongodb \
         imagick
 
-# Wkhtmltopdf
-RUN apt-get install -y --no-install-recommends \
-        libxrender-dev \
-        wget \
-        xz-utils \
-    && wget http://download.gna.org/wkhtmltopdf/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && cp wkhtmltox/bin/wkhtmltopdf /usr/local/bin/ \
-    && cp wkhtmltox/bin/wkhtmltoimage /usr/local/bin/ \
-    && rm wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Composer
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
@@ -53,10 +39,30 @@ RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
     && mkdir -p /var/.composer \
     && composer global --no-interaction --working-dir=/var/.composer require symfony/var-dumper
 
-# Node / NPM / Bower / Gulp / Zombie.js
+# Wkhtmltopdf
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libxrender-dev \
+        wget \
+        xz-utils \
+    && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && cp wkhtmltox/bin/wkhtmltopdf /usr/local/bin/ \
+    && cp wkhtmltox/bin/wkhtmltoimage /usr/local/bin/ \
+    && rm wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Node
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && npm install -g bower \
-    && npm install -g gulp \
-    && npm install -g zombie --save-dev
+    && apt-get update \
+    && apt-get install -y nodejs
+
+# Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get install -y yarn
+
+# Bower / Gulp / Zombie.js
+RUN yarn global add bower gulp zombie
