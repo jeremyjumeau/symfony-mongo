@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
     && docker-php-ext-enable \
         mongodb \
-        imagick
+        imagick \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Composer
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
@@ -43,26 +44,27 @@ RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libxrender-dev \
-        wget \
         xz-utils \
-    && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && curl -LO https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
     && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
     && cp wkhtmltox/bin/wkhtmltopdf /usr/local/bin/ \
     && cp wkhtmltox/bin/wkhtmltoimage /usr/local/bin/ \
-    && rm wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && apt-get clean \
+    && rm -R wkhtmltox* \
+    && apt-get remove -y xz-utils libxrender-dev \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Node
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get update \
-    && apt-get install -y nodejs
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
-    && apt-get install -y yarn
+    && apt-get install -y --no-install-recommends yarn \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Bower / Gulp / Zombie.js
-RUN yarn global add bower gulp zombie
+# Gulp / Zombie.js
+RUN yarn global add gulp zombie
