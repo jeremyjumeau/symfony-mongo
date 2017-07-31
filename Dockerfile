@@ -11,6 +11,7 @@ MAINTAINER Jeremy Jumeau <jumeau.jeremy@gmail.com>
 # Minimal packages
 RUN apk add --no-cache --virtual .persistent-deps \
         bash \
+	git \
         icu-libs \
         nodejs \
         zlib \
