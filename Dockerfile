@@ -85,3 +85,5 @@ RUN set -xe \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
         yarn \
     && yarn global add gulp zombie
+
+WORKDIR /var/www
